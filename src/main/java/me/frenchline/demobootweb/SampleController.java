@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SampleController {
 
+    /* 포매터 사용 : URL 경로의 문자열 -> Person 객체 */
     @GetMapping("/hello/{name}")
-    public String hello(@PathVariable String name) {
-        return "hello " + name;
+    public String hello(@PathVariable("name") Person person) {
+        return "hello " + person.getName();
     }
 }
