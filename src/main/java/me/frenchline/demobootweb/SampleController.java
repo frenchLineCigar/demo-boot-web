@@ -14,9 +14,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class SampleController {
 
-    /* 포매터 사용 : 요청 파라미터 문자열 -> Person 객체 */
+    // preHandle 1
+    // preHandle 2
+    // 요청 처리
+    // postHandle 2
+    // postHandle 1
+    // 뷰 렌더링
+    // afterCompletion 2
+    // afterCompletion 1
+
+
     @GetMapping("/hello")
     public String hello(@RequestParam("id") Person person) {
+        System.out.println("SampleController.hello");
         return "hello " + person.getName();
     }
 }
