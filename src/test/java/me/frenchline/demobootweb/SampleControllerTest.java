@@ -27,8 +27,9 @@ public class SampleControllerTest {
 
     @Test
     public void hello() throws Exception {
-        this.mockMvc.perform(get("/hello/frenchline")) // 해당 URL의 GET 요청을 보내면
-                .andDo(print()) //요청과 응답 내용을 출력하고
-                .andExpect(content().string("hello frenchline")); // 응답 본문(ReponseBody)에 문자열로 hello frenchline이 나올 것이다.
+        this.mockMvc.perform(get("/hello")
+                            .param("name", "frenchline")) //parameter mocking
+                .andDo(print())
+                .andExpect(content().string("hello frenchline"));
     }
 }
