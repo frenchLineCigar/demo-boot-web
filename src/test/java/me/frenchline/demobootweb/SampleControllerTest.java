@@ -3,7 +3,9 @@ package me.frenchline.demobootweb;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -19,7 +21,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  */
 
 @RunWith(SpringRunner.class)
-@WebMvcTest //웹과 관련된 계층만 슬라이싱 테스트(웹과 관련된 계층의 Bean만 등록), 이 애노테이션을 사용하면 MockMvc라는 클래스를 자동주입 받을 수 있다.
+@SpringBootTest //스프링 부트 통합 테스트, 이 애노테이션을 사용하면 모든 Bean들을 테스트에서 사용할 수 있다
+@AutoConfigureMockMvc //이 애노테이션을 사용하면 MockMvc 객체를 자동주입 받을 수 있다.
 public class SampleControllerTest {
 
     @Autowired

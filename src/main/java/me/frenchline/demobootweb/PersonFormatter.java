@@ -1,15 +1,15 @@
 package me.frenchline.demobootweb;
 
 import org.springframework.format.Formatter;
+import org.springframework.stereotype.Component;
 
 import java.text.ParseException;
 import java.util.Locale;
 
 /**
- * @author swlee
- * @contact frenchline707@gmail.com
- * @since 2019-11-21
+ * 스프링 부트는 특정 Formatter가 Bean으로 등록되어 있다면 그 빈으로 포매터를 자동 등록해준다.
  */
+@Component
 public class PersonFormatter implements Formatter<Person> {
 
     //문자열 -> 객체
