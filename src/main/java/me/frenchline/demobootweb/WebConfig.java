@@ -3,10 +3,12 @@ package me.frenchline.demobootweb;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
 import org.springframework.http.CacheControl;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 @Configuration
@@ -34,5 +36,25 @@ public class WebConfig implements WebMvcConfigurer {
                 /* - 여기서 리턴하는 리소스들은 기본적으로 캐시 컨트롤과 관련된 정보가 응답 헤더에 추가된다 */
                 /* - 만약 리소스가 변경되지 않았다면 이 응답은 10분 동안 캐싱한다 (status: 304 not modified) */
                 /* - 리소스가 변경됐다면 10분이 안 지났더라도 변경된 리소스로 갱신한다 */
+    }
+
+
+    /* HTTP 메시지 컨버터 커스텀 설정 : 기본으로 등록해주는 컨버터를 다 무시하고 새로 컨버터 설정하기 */
+    @Override
+    public void configureMessageConverters(List<HttpMessageConverter<?>> converters) {
+        /**
+         * 1. If no converters are added, a default list of converters is registered.
+         * 2. Note that adding converters to the list, turns off default converter registration.
+         */
+    }
+
+    /* HTTP 메시지 컨버터 커스텀 설정 : 기본으로 등록해주는 컨버터에 새로운 컨버터만 추가하기 */
+    @Override
+    public void extendMessageConverters(List<HttpMessageConverter<?>> converters) {
+        /**
+         * 1. A hook for extending or modifying the list of converters after it has been configured.
+         * 2. This may be useful for example to allow default converters to be registered
+         * and then insert a custom converter through this method.
+         */
     }
 }

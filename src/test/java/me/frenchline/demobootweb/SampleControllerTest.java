@@ -65,7 +65,15 @@ public class SampleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string(Matchers.containsStringIgnoringCase("hello mobile")))
                 .andExpect(header().exists(HttpHeaders.CACHE_CONTROL)); //응답 헤더에 Cache-Control 과 관련된 정보가 존재해야 한다
+    }
 
-
+    /* 기본 HTTP 메시지 컨버터 : 문자열 컨버터 */
+    @Test
+    public void stringMessage() throws Exception {
+        this.mockMvc.perform(get("/message")
+                .content("hello"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string("hello"));
     }
 }

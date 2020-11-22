@@ -2,7 +2,9 @@ package me.frenchline.demobootweb;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -29,4 +31,11 @@ public class SampleController {
         System.out.println("SampleController.hello");
         return "hello " + person.getName();
     }
+
+    /* 기본 HTTP 메시지 컨버터 : 문자열 컨버터 */
+    @GetMapping("/message")
+    public String message(@RequestBody String body) {
+        return body;
+    }
+
 }
