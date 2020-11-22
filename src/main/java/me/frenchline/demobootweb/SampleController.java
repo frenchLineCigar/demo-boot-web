@@ -38,4 +38,11 @@ public class SampleController {
         return body;
     }
 
+    /* JSON용 HTTP 메시지 컨버터가 기본으로 등록 : JacksonJSON 2가 제공하는 ObjectMapper 사용 */
+    @GetMapping("/jsonMessage")
+    public Person jsonMessage(@RequestBody Person person) {
+        return person;
+    }
+
+
 }

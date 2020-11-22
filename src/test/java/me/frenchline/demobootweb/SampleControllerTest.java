@@ -1,5 +1,6 @@
 package me.frenchline.demobootweb;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -8,6 +9,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -35,6 +37,27 @@ public class SampleControllerTest {
     @Autowired
     PersonRepository personRepository;
 
+    @Autowired
+    ObjectMapper objectMapper;
+
+    /* JSON용 HTTP 메시지 컨버터가 기본으로 등록 : JacksonJSON 2가 제공하는 ObjectMapper 사용 */
+    @Test
+    public void jsonMessage() throws Exception {
+        Person person = new Person();
+        person.setId(2019l);
+        person.setName("frenchline");
+
+        /* ObjectMapper를 사용해서 객체를 json 문자열로 변환 가능 */
+        String jsonString = objectMapper.writeValueAsString(person);
+
+        this.mockMvc.perform(get("/jsonMessage") /* perform() 메서드의 인자에는 요청에 대한 정보가 들어간다 */
+                    .contentType(MediaType.APPLICATION_JSON_UTF8) //Content-Type은 요청 본문(Request Body)에 보내는 정보가 JSON 타입임을 서버에 알림
+                    .accept(MediaType.APPLICATION_JSON_UTF8) //Accept는 이 요청에 대한 응답을 JSON 타입으로 보내달라
+                    .content(jsonString))
+                .andDo(print())
+                .andExpect(status().isOk());
+    }
+    
     @Test
     public void hello() throws Exception {
 
@@ -76,4 +99,5 @@ public class SampleControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(content().string("hello"));
     }
+
 }
