@@ -10,15 +10,23 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.oxm.Marshaller;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.xml.transform.Result;
+import javax.xml.transform.stream.StreamResult;
+
+import java.io.StringWriter;
 
 import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.xpath;
 
 /**
  * @author swlee
@@ -38,7 +46,10 @@ public class SampleControllerTest {
     PersonRepository personRepository;
 
     @Autowired
-    ObjectMapper objectMapper;
+    ObjectMapper objectMapper; //JSON
+
+    @Autowired
+    Marshaller marshaller; //XML
 
     /* JSON용 HTTP 메시지 컨버터가 기본으로 등록 : JacksonJSON 2가 제공하는 ObjectMapper 사용 */
     @Test
@@ -55,7 +66,32 @@ public class SampleControllerTest {
                     .accept(MediaType.APPLICATION_JSON_UTF8) //Accept는 이 요청에 대한 응답을 JSON 타입으로 보내달라
                     .content(jsonString))
                 .andDo(print())
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(2019))
+                .andExpect(jsonPath("$.name").value("frenchline")); //JSON 응답 본문(Response Body)을 확인하기 위해 JSON path 문법 사용
+    }
+
+    /* XML용 HTTP 메시지 컨버터 별도 등록(의존성 추가) : JAXB 2가 제공하는 Marshaller 사용 */
+    @Test
+    public void xmlMessage() throws Exception {
+        Person person = new Person();
+        person.setId(2019l);
+        person.setName("frenchline");
+
+        /* Marshaller를 사용해서 객체를 xml 문자열로 변환 */
+        StringWriter stringWriter = new StringWriter();
+        Result result = new StreamResult(stringWriter);
+        marshaller.marshal(person, result);
+        String xmlString = stringWriter.toString();
+        
+        this.mockMvc.perform(get("/xmlMessage") /* perform() 메서드의 인자에는 요청에 대한 정보가 들어간다 */
+                .contentType(MediaType.APPLICATION_XML) //XML로 요청 본문을 보낸다
+                .accept(MediaType.APPLICATION_XML) //XML로 응답 본문을 받고싶다
+                .content(xmlString))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(xpath("person/name").string("frenchline"))
+                .andExpect(xpath("person/id").string("2019")); //XML 응답 본문(Response Body)을 확인하기 위해 Xpath 문법 사용
     }
     
     @Test

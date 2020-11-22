@@ -44,5 +44,11 @@ public class SampleController {
         return person;
     }
 
+    /* XML용 HTTP 메시지 컨버터 별도 등록(의존성 추가) : JAXB 2가 제공하는 Marshaller 사용 */
+    @GetMapping("/xmlMessage")
+    public Person xmlMessage(@RequestBody Person person) {
+        return person;
+    }
+
 
 }
