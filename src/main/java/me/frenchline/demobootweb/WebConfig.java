@@ -8,6 +8,7 @@ import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.util.List;
@@ -15,6 +16,12 @@ import java.util.concurrent.TimeUnit;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    /* 뷰 컨트롤러 : 단순하게 요청 URL을 (컨트롤러를 작성할 필요 없이) 특정 뷰로 연결하고 싶을 때 사용 */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("hi").setViewName("hi");
+    }
 
     /* 추상화된 Marshaller 인터페이스를 구현하는 빈 등록*/
     @Bean
