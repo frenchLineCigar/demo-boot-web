@@ -1,11 +1,13 @@
 package me.frenchline.demobootweb;
 
+import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -13,6 +15,8 @@ import static org.junit.Assert.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
  * @author swlee
@@ -42,5 +46,26 @@ public class SampleControllerTest {
                             .param("id", savedPerson.getId().toString())) //parameter mocking
                 .andDo(print())
                 .andExpect(content().string("hello frenchline"));
+    }
+
+    /* 스프링 부트는 기본적으로 정적 리소스 핸들러와 캐싱 제공 */
+    @Test
+    public void helloStatic() throws Exception {
+        this.mockMvc.perform(get("/index.html"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(Matchers.containsString("hello index")));
+    }
+
+    /* 리소스 핸들러 커스텀 설정 */
+    @Test
+    public void helloStaticCustom() throws Exception {
+        this.mockMvc.perform(get("/mobile/index.html"))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(content().string(Matchers.containsStringIgnoringCase("hello mobile")))
+                .andExpect(header().exists(HttpHeaders.CACHE_CONTROL)); //응답 헤더에 Cache-Control 과 관련된 정보가 존재해야 한다
+
+
     }
 }
